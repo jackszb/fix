@@ -31,7 +31,13 @@ jobs:
         run: |
           python auto_fix_and_download_domain_regex.py  # 运行你的修复脚本
 
+      - name: Check if there are changes to commit
+        id: check_changes
+        run: |
+          git diff --exit-code || echo "Changes detected"
+
       - name: Commit and push changes
+        if: steps.check_changes.outputs.exit_code != 0
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
